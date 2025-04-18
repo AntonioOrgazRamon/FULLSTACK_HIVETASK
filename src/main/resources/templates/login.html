@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Formulario de Usuario</title>
+</head>
+<body>
+
+<h2>Formulario de Usuario</h2>
+
+<form action="#" th:object="${user}" method="post">
+  <!-- Campo ID (Generalmente no se edita, pero si se necesita, se puede incluir) -->
+
+  <!-- Campo Name -->
+  <div>
+    <label for="name">Nombre:</label>
+    <input type="text" id="name" th:field="*{name}" placeholder="Nombre completo" required />
+  </div>
+
+  <!-- Campo Email -->
+  <div>
+    <label for="email">Correo Electrónico:</label>
+    <input type="email" id="email" th:field="*{email}" placeholder="Correo electrónico" required />
+  </div>
+
+  <!-- Campo Password -->
+  <div>
+    <label for="password">Contraseña:</label>
+    <input type="password" id="password" th:field="*{password}" placeholder="Contraseña" required />
+  </div>
+
+  <!-- Campo Username -->
+  <div>
+    <label for="userName">Nombre de usuario:</label>
+    <input type="text" id="userName" th:field="*{userName}" placeholder="Nombre de usuario" required />
+  </div>
+
+  <!-- Campo CodeIMG -->
+
+
+  <!-- Botón de envío -->
+  <div>
+    <button type="submit"  >Guardar</button>
+  </div>
+</form>
+
+</body>
+</html>

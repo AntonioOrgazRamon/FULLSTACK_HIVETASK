@@ -7,6 +7,7 @@ import com.HiveTask.persistance.database.DatabaseConnection;
 import com.HiveTask.persistance.rowMaper.UsersRowMapper;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class UserDaoImpl implements UserDao {
@@ -24,17 +25,15 @@ public class UserDaoImpl implements UserDao {
     @Override
     public void userRegister(User user) {
 
-        String sql = "INSERT INTO users (id, name, email, password, userName, codeIMG) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO users (name, email, password, userName) VALUES (?, ?, ?, ?)";
 
 
         try (PreparedStatement preparedStatement = databaseConnection.prepareStatement(sql)){
 
-            preparedStatement.setInt(1, user.getId());
-            preparedStatement.setString(2, user.getName());
-            preparedStatement.setString(3, user.getEmail());
-            preparedStatement.setString(4, user.getPassword());
-            preparedStatement.setString(5, user.getUserName());
-            preparedStatement.setString(6, user.getCodeIMG());
+            preparedStatement.setString(1, user.getName());
+            preparedStatement.setString(2, user.getEmail());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getUserName());
 
             int affectedRows = preparedStatement.executeUpdate();
 
@@ -42,6 +41,9 @@ public class UserDaoImpl implements UserDao {
                 throw new SQLException("No se inserto ningun registro");
             } else {
                 System.out.println("Se inserto un nuevo usuario");
+
+                userLoginByEmail(user.getEmail(), user.getPassword());
+
             }
 
         } catch (SQLException e) {
@@ -51,12 +53,52 @@ public class UserDaoImpl implements UserDao {
     }
 
     @Override
-    public void userLoginByEmail(String email) {
+    public void userLoginByEmail(String email, String password) {
+
+        String sql = "SELECT email, password FROM users WHERE email = ? AND password = ?";
+
+        try (PreparedStatement preparedStatement = databaseConnection.prepareStatement(sql)) {
+
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, password);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                // Se encontró un usuario con ese email y password
+                System.out.println("Login exitoso.");
+            } else {
+                // No se encontró ningún usuario
+                System.out.println("Email o contraseña incorrectos.");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
 
     @Override
-    public void userLoginByName(String name) {
+    public void userLoginByName(String userName, String password) {
+
+        String sql = "SELECT * FROM users WHERE userName = ? AND password = ?";
+
+        try (PreparedStatement preparedStatement = databaseConnection.prepareStatement(sql)) {
+            preparedStatement.setString(1, userName);
+            preparedStatement.setString(2, password);
+
+            ResultSet rs = preparedStatement.executeQuery();
+
+            if (rs.next()) {
+                System.out.println("Login exitoso para el usuario: " + rs.getString("userName"));
+            } else {
+                System.out.println("Nombre de usuario o contraseña incorrectos.");
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 }

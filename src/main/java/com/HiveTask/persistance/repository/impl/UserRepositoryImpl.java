@@ -16,16 +16,16 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void userRegister(User user) {
-
+        userDao.userRegister(user);
     }
 
     @Override
-    public void userLoginByEmail(String email) {
-
+    public void userLoginByEmail(String email, String password) {
+        userDao.userLoginByEmail(email, password);
     }
 
     @Override
-    public void userLoginByName(String name) {
-
+    public void userLoginByName(String userName, String password) {
+        userDao.userLoginByName(userName, password);
     }
 }
